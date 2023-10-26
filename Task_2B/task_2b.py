@@ -51,7 +51,7 @@ img_name_list = []
 '''
 You can delare the necessary variables here
 '''
-# device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # EVENT NAMES
 '''
@@ -98,12 +98,12 @@ def classify_event(image):
         transforms.RandomHorizontalFlip(p = 0.5),
         transforms.ToTensor()
     ])
-    model = torch.load('task2b_model.pt', map_location=torch.device('cpu'))
+    model = torch.load('task2b_model.pt', map_location=torch.device(device))
     model.eval()
     with torch.inference_mode():
       transformed_image = data_transform(img).unsqueeze(dim=0)
 
-      target_image_pred = model(transformed_image.to('cpu'))
+      target_image_pred = model(transformed_image.to(device))
 
     target_image_pred_probs = torch.softmax(target_image_pred, dim=1)
 

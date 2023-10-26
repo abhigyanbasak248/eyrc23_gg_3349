@@ -15,9 +15,14 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 data_transform = transforms.Compose([
     transforms.Resize(size = (224, 224)),
+    transforms.RandomRotation(degrees = 45),
     transforms.RandomHorizontalFlip(p = 0.5),
-    transforms.ToTensor()
+#     transforms.RandomVerticalFlip(p = 0.05),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])
 ])
+
 train_dir = '/kaggle/input/eyantra/training'
 test_dir = '/kaggle/input/eyantra/testing'
 train_data = datasets.ImageFolder(root = train_dir,
@@ -26,15 +31,17 @@ train_data = datasets.ImageFolder(root = train_dir,
 test_data = datasets.ImageFolder(root = test_dir,
                                  transform = data_transform)
 
-train_dataloader = DataLoader(dataset = train_data, batch_size = 16, shuffle = True)
-test_dataloader = DataLoader(dataset = test_data, batch_size = 16, shuffle = True)
+train_dataloader = DataLoader(dataset = train_data, batch_size = 32, shuffle = True)
+test_dataloader = DataLoader(dataset = test_data, batch_size = 32, shuffle = True)
 
 
-weights = torchvision.models.EfficientNet_B0_Weights.DEFAULT
-model = torchvision.models.efficientnet_b0(weights=weights).to(device)
+weights = torchvision.models.ResNet50_Weights.DEFAULT
+model = torchvision.models.resnet50(weights=weights).to(device)
 
-for param in model.features.parameters():
+for param in model.parameters():
     param.requires_grad = False
+for param in model.fc.parameters():
+    param.requires_grad = True
     
 torch.manual_seed(42)
 torch.cuda.manual_seed(42)
@@ -42,12 +49,13 @@ torch.cuda.manual_seed(42)
 output_shape = 5
 
 model.classifier = torch.nn.Sequential(
-    torch.nn.Linear(in_features=1280, 
+    torch.nn.Dropout(p=0.2, inplace=True),
+    torch.nn.Linear(in_features=2048, 
                     out_features=output_shape, # same number of output units as our number of classes
                     bias=True)).to(device)
 
 torchinfo.summary(model, 
-        input_size=(16, 3, 224, 224), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
+        input_size=(32, 3, 224, 224), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
         verbose=0,
         col_names=["input_size", "output_size", "num_params", "trainable"],
         col_width=20,
@@ -63,25 +71,6 @@ def train_step(model: torch.nn.Module,
                loss_fn: torch.nn.Module, 
                optimizer: torch.optim.Optimizer,
                device: torch.device) -> Tuple[float, float]:
-  """Trains a PyTorch model for a single epoch.
-
-  Turns a target PyTorch model to training mode and then
-  runs through all of the required training steps (forward
-  pass, loss calculation, optimizer step).
-
-  Args:
-    model: A PyTorch model to be trained.
-    dataloader: A DataLoader instance for the model to be trained on.
-    loss_fn: A PyTorch loss function to minimize.
-    optimizer: A PyTorch optimizer to help minimize the loss function.
-    device: A target device to compute on (e.g. "cuda" or "cpu").
-
-  Returns:
-    A tuple of training loss and training accuracy metrics.
-    In the form (train_loss, train_accuracy). For example:
-
-    (0.1112, 0.8743)
-  """
   # Put model in train mode
   model.train()
 
@@ -200,7 +189,7 @@ results = train(model=model,
                        test_dataloader=test_dataloader,
                        optimizer=optimizer,
                        loss_fn=loss_fn,
-                       epochs=5,
+                       epochs=10,
                        device=device)
 
 def plot_loss_curves(results: Dict[str, List[float]]):
