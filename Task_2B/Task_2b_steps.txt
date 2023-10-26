@@ -1,0 +1,13 @@
+Team ID = 3349
+Trained weights drive link = https://drive.google.com/file/d/14TE3z-_gqhHN1A9f5wHYMtrZ0X-HgD1h/view?usp=sharing
+
+###############################################################################
+'''
+Please write the complete steps taken by your team explaining how you completed Task 2B. It is adviced to be as elaborate as possible.
+
+1. After loading the files with ImageFolder, resized the images to (224, 224, 3) and performed data augmentation.
+2. Loaded pretrained EfficientNetB0 model with imagenet weights and froze the layers.
+3. Added another output layer with 5 neurons with softmax activation function.
+4. Used Cross Entropy loss and adam optimizer and trained the model.
+5. Created a function to check the accuracy of the model with the test set.
+6. Saved the model and loaded it to get predictions.
