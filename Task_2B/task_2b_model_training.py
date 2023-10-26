@@ -35,8 +35,7 @@ train_dataloader = DataLoader(dataset = train_data, batch_size = 32, shuffle = T
 test_dataloader = DataLoader(dataset = test_data, batch_size = 32, shuffle = True)
 
 
-weights = torchvision.models.ResNet50_Weights.DEFAULT
-model = torchvision.models.resnet50(weights=weights).to(device)
+model = torchvision.models.resnet101(weights="DEFAULT").to(device)
 
 for param in model.parameters():
     param.requires_grad = False
@@ -48,11 +47,9 @@ torch.cuda.manual_seed(42)
 
 output_shape = 5
 
-model.classifier = torch.nn.Sequential(
-    torch.nn.Dropout(p=0.2, inplace=True),
-    torch.nn.Linear(in_features=2048, 
-                    out_features=output_shape, # same number of output units as our number of classes
-                    bias=True)).to(device)
+model.fc = torch.nn.Linear(in_features=2048, 
+                    out_features=output_shape)
+model.to(device)
 
 torchinfo.summary(model, 
         input_size=(32, 3, 224, 224), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
@@ -191,6 +188,12 @@ results = train(model=model,
                        loss_fn=loss_fn,
                        epochs=10,
                        device=device)
+
+loss,acc = test_step(model = model,
+                    dataloader = test_dataloader,
+                    loss_fn = loss_fn,
+                    device = device) 
+print(loss, acc)
 
 def plot_loss_curves(results: Dict[str, List[float]]):
     """Plots training curves of a results dictionary.

@@ -1,13 +1,13 @@
 Team ID = 3349
-Trained weights drive link = https://drive.google.com/file/d/1VLEwN3Z__fwKucCNB7xgZdUjz5yWeepr/view?usp=sharing
+Trained weights drive link = https://drive.google.com/file/d/12fK8IT3WbB9NELtOCW_w8UB20RdVLJHL/view?usp=sharing
 
 ###############################################################################
 '''
 Please write the complete steps taken by your team explaining how you completed Task 2B. It is adviced to be as elaborate as possible.
 
 1. After loading the files with ImageFolder, resized the images to (224, 224, 3) and performed data augmentation and normalization.
-2. Loaded pretrained ResNet50 model with imagenet weights and froze the layers.
-3. Added a dropout layer and an output layer with 5 neurons with softmax activation function.
+2. Loaded pretrained ResNet101 model with imagenet weights and froze the layers.
+3. Added an output layer with 5 neurons with softmax activation function.
 4. Used Cross Entropy loss and adam optimizer with learning rate of 0.01 and trained the model.
 5. Created a function to check the accuracy of the model with the test set.
 6. Saved the model and loaded it to get predictions.
