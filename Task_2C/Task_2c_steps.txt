@@ -1,0 +1,13 @@
+Team ID = 3349
+Trained weights drive link = https://drive.google.com/file/d/1xH37ws_xKpwYWOpXOgTcTiKwHWpQqzwY/view?usp=sharing
+###############################################################################
+'''
+Please write the complete steps taken by your team explaining how you completed Task 2C. It is adviced to be as elaborate as possible.
+
+1.  First to extract the 5 regions of interest, we worked with the Sameple.png to find out their coordinates.
+2. We converted the image to HSV and used a colour trackbar created using openCV to detect the min and max values of BGR for creating a mask with inRange function on the image.
+3. Once the mask was created we did a Canny edge detection and subsequently a contour detection on the Canny image.
+4. We ran a loop for each contour detected and set a threshold value of the area of the contour found through trial and error.
+5. After getting an appropriate threshold, we get the x and y coordinates of the top left corner and the width and height of the contours of the 5 regions of interest in the image.
+6. Using the x,y,w,h values we extract the part of the image and feed it to the classify function.
+7. For the classification function we used a pretrained ResNet101 model with Adam optimizer, learning rate 0.01 and crossentropy loss. We froze all the layers and changed the number of output neurons to 5 and also added the softmax activation function.
