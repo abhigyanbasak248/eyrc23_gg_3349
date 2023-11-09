@@ -16,10 +16,10 @@
 '''
 ############################## FILL THE MANDATORY INFORMATION BELOW ###############################
 
-# Team ID:			[ 3349 ]
-# Author List:		[ Abhigyan Basak, Shagnik Guha, Rochelle Maria Quadros, Hriday Dhawan ]
+# Team ID:			[ Team-ID ]
+# Author List:		[ Names of team members worked on this file separated by Comma: Name1, Name2, ... ]
 # Filename:			Task_2D.py
-# Functions:	    [ read_csv(csv_name), write_csv(loc, csv_name), tracker(ar_id, lat_lon) ]
+# Functions:	    [ Function names ]
 ###################################################################################################
 
 # IMPORTS (DO NOT CHANGE/REMOVE THESE IMPORTS)
@@ -27,8 +27,6 @@ import csv
 import time
 
 # Additional Imports
-import pandas as pd
-
 '''
 You can import your required libraries here
 
@@ -59,11 +57,10 @@ def read_csv(csv_name):
             ar_id, lat, lon = row
 
             lat_lon[ar_id] = [lat, lon]
-    return lat_lon
-
+    return lat_lon 
 
 def write_csv(loc, csv_name):
-    
+
     # open csv (csv_name)
     # write column names "lat", "lon"
     # write loc ([lat, lon]) in respective columns
@@ -84,15 +81,14 @@ def tracker(ar_id, lat_lon):
     if ar_id in lat_lon:
         lat, lon = lat_lon[ar_id]
 
-        lat = float(lat)
-        lon = float(lon)
-
-        write_csv({ar_id: [lat, lon]}, "live_location.csv")
+        write_csv({ar_id: [lat, lon]}, "live_data.csv")
 
         return [lat, lon]
     else:
         return [0, 0]
-    
+    # also return coordinate ([lat, lon]) associated with respective ar_id.
+    return coordinate
+
 # ADDITIONAL FUNCTIONS
 
 '''
