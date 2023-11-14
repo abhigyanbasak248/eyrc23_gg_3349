@@ -1,5 +1,5 @@
 Team ID = 3349
-Trained weights drive link = https://drive.google.com/file/d/1xH37ws_xKpwYWOpXOgTcTiKwHWpQqzwY/view?usp=sharing
+Trained weights drive link = https://drive.google.com/file/d/14TwMENZnnBZsrQoKETd9PFbuoN2_1ruy/view?usp=sharing
 ###############################################################################
 '''
 Please write the complete steps taken by your team explaining how you completed Task 2C. It is adviced to be as elaborate as possible.
@@ -10,4 +10,5 @@ Please write the complete steps taken by your team explaining how you completed 
 4. We ran a loop for each contour detected and set a threshold value of the area of the contour found through trial and error.
 5. After getting an appropriate threshold, we get the x and y coordinates of the top left corner and the width and height of the contours of the 5 regions of interest in the image.
 6. Using the x,y,w,h values we extract the part of the image and feed it to the classify function.
-7. For the classification function we used a pretrained ResNet101 model with Adam optimizer, learning rate 0.01 and crossentropy loss. We froze all the layers and changed the number of output neurons to 5 and also added the softmax activation function.
+7. For the classification function we used a pretrained Vision Transformer model with Adam optimizer, learning rate 0.001 and crossentropy loss. We froze all the layers and changed the number of output neurons to 5 and also added the softmax activation function.
+8. We trained the model for 30 epochs plotted the loss curves and tested the model.

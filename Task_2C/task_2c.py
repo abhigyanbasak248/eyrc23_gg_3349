@@ -145,6 +145,9 @@ def event_identification(arena):        # NOTE: You can tweak this function in c
         x,y,w,h=i
         imgCrop = arena[y:y+h,x:x+w]
         event_list.append(imgCrop)
+    t = event_list[2]
+    event_list[2] = event_list[3]
+    event_list[3] = t
     return event_list
 
 # Event Detection
@@ -174,10 +177,9 @@ def classify_event(image):
     image = Image.fromarray(np.uint8(image))
     data_transform = transforms.Compose([
         transforms.Resize(size = (224, 224)),
-        transforms.RandomHorizontalFlip(p = 0.5),
         transforms.ToTensor()
     ])
-    model = torch.load('results4/task2b_model2.pt', map_location=torch.device(device))
+    model = torch.load('results13/model1.pt', map_location=torch.device(device))
     model.eval()
     with torch.inference_mode():
       transformed_image = data_transform(image).unsqueeze(dim=0)

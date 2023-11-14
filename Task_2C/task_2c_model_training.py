@@ -35,14 +35,12 @@ train_dataloader = DataLoader(dataset = train_data, batch_size = 32, shuffle = T
 test_dataloader = DataLoader(dataset = test_data, batch_size = 32, shuffle = True)
 
 
-model = torchvision.models.resnet152(weights="DEFAULT").to(device)
+model = torchvision.models.vit_b_32(weights="DEFAULT").to(device)
 
 for param in model.parameters():
     param.requires_grad = False
-for param in model.layer4.parameters():
-    param.requires_grad = True
-for param in model.fc.parameters():
-    param.requires_grad = True
+model.heads = torch.nn.Linear(in_features=768, 
+                out_features=output_shape)
 
     
 torch.manual_seed(42)
@@ -50,8 +48,6 @@ torch.cuda.manual_seed(42)
 
 output_shape = 5
 
-model.fc = torch.nn.Linear(in_features=2048, 
-                    out_features=output_shape)
 model.to(device)
 
 torchinfo.summary(model, 
@@ -63,7 +59,7 @@ torchinfo.summary(model,
 )
 
 loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 
 def train_step(model: torch.nn.Module, 
@@ -189,7 +185,7 @@ results = train(model=model,
                        test_dataloader=test_dataloader,
                        optimizer=optimizer,
                        loss_fn=loss_fn,
-                       epochs=10,
+                       epochs=30,
                        device=device)
 
 loss,acc = test_step(model = model,
@@ -241,4 +237,4 @@ def plot_loss_curves(results: Dict[str, List[float]]):
     
 plot_loss_curves(results)
 
-torch.save(model, 'task2b_model.pt')
+torch.save(model, 'model1.pt')
