@@ -1,0 +1,1 @@
+{"E": "fire", "D": "military_vehicles", "C": "combat", "B": "destroyed_buildings", "A": "human_aid_rehabiliation"}
