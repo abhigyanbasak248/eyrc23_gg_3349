@@ -1,0 +1,1 @@
+{"E": "fire", "D": "fire", "C": "combat", "B": "destroyed_buildings", "A": "military_vehicles"}
